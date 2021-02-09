@@ -5,10 +5,12 @@ addButton.addEventListener('click', () => {
 
 function addToDo (todo) {
   const todoList = document.querySelector("#todos");
+  const doneList = document.querySelector("#done");
+
   const todoItem = document.createElement("ion-item-sliding");
   todoItem.id = todo.id;
   todoItem.innerHTML = `
-    <ion-item>
+    <ion-item onclick="updateToDo('${todo.id}')">
       <ion-label>
         <h2>${todo.title}</h2>
         <h3>${todo.due.toDateString()}まで</h3>
@@ -16,18 +18,28 @@ function addToDo (todo) {
         <ion-checkbox ${(todo.done) ? 'checked' : ''} color="primary" slot="start"></ion-checkbox>
     </ion-item>
     <ion-item-options side="end">
-    <ion-item-option color="danger" expandable onClick="onDeleteToDo('${todo.id}')">
+    <ion-item-option color="danger" expandable onClick="deleteToDo('${todo.id}')">
         Delete
       </ion-item-option>
     </ion-item-options>
   `;
-  todoList.appendChild(todoItem);
+  if (todo.done) {
+    doneList.appendChild(todoItem);
+  } else {
+    todoList.appendChild(todoItem);
+  }
 }
 
-function onDeleteToDo(todoId) {
-  console.log(todoId);
+function deleteToDo(todoId) {
   todos.splice(todos.findIndex(el => el.id === todoId), 1);
   document.querySelector(`#${todoId}`).remove();
+}
+
+function updateToDo(todoId) {
+  const todo = todos.find(el => el.id === todoId);
+  todo.done = !todo.done;
+  document.querySelector(`#${todoId}`).remove();
+  addToDo(todo);
 }
 
 function showAlert(header, subheader, message) {
@@ -136,7 +148,7 @@ function writeToDo(todos) {
     const todoItem = document.createElement("ion-item-sliding");
     todoItem.id = todo.id;
     todoItem.innerHTML = `
-      <ion-item>
+    <ion-item onclick="updateToDo('${todo.id}')">
         <ion-label>
           <h2>${todo.title}</h2>
           <h3>${todo.due.toDateString()}まで</h3>
@@ -146,7 +158,7 @@ function writeToDo(todos) {
         } color="primary" slot="start"></ion-checkbox>
       </ion-item>
       <ion-item-options side="end">
-    <ion-item-option color="danger" expandable onClick="onDeleteToDo('${todo.id}')">
+    <ion-item-option color="danger" expandable onClick="deleteToDo('${todo.id}')">
           Delete
         </ion-item-option>
       </ion-item-options>
