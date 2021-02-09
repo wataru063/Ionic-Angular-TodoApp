@@ -73,6 +73,7 @@ function showAlert(header, subheader, message) {
         todo.due = new Date(document.querySelector("#new-due").value);
         todo.id = 'todo' + (new Date).getSeconds().toString();
         todo.done = false;
+        todos.push(todo);
         addToDo(todo);
       }
     }
