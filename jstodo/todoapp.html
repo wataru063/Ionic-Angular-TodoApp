@@ -15,91 +15,30 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>
-          My ToDo
+          My To Do
         </ion-title>
+        <ion-buttons slot="end">
+          <ion-button id="addButton">追加</ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
-  </ion-app>
-  <ion-content>
-    <ion-list>
-      <ion-list-header>
-        まだやってないもの
-      </ion-list-header>
-      <ion-item>
-        <ion-label>
-          <h2>部屋の掃除</h2>
-          <h3>2021年10月30日まで</h3>
-        </ion-label>
-        <ion-checkbox color="primary" slot="start"></ion-checkbox>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          <h2>ゴミ捨て</h2>
-          <h3>2021年10月30日まで</h3>
-        </ion-label>
-        <ion-checkbox color="primary" slot="start"></ion-checkbox>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          <h2>風呂の掃除</h2>
-          <h3>2021年10月30日まで</h3>
-        </ion-label>
-        <ion-checkbox color="primary" slot="start"></ion-checkbox>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          <h2>屋根の掃除</h2>
-          <h3>2021年10月30日まで</h3>
-        </ion-label>
-        <ion-checkbox color="primary" slot="start"></ion-checkbox>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          <h2>窓の掃除</h2>
-          <h3>2021年10月30日まで</h3>
-        </ion-label>
-        <ion-checkbox color="primary" slot="start"></ion-checkbox>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          <h2>犬小屋の掃除</h2>
-          <h3>2021年10月30日まで</h3>
-        </ion-label>
-        <ion-checkbox color="primary" slot="start"></ion-checkbox>
-      </ion-item>
+    <ion-content>
+      <ion-list id="todos">
+        <ion-list-header>
+          まだやってないもの
+        </ion-list-header>
 
-      <ion-list-header>
-        もうやったもの
-      </ion-list-header>
+      </ion-list>
+      <ion-list id="done">
+        <ion-list-header>
+          もうやったもの
+        </ion-list-header>
 
-      <ion-item>
-        <ion-label>
-          <h2>朝飯を食う</h2>
-          <h3>2021年10月30日まで</h3>
-        </ion-label>
-        <ion-checkbox color="primary" checked slot="start"></ion-checkbox>
-      </ion-item>
+      </ion-list>
 
-      <ion-item>
-        <ion-label>
-          <h2>昼飯を食う</h2>
-          <h3>2021年10月30日まで</h3>
-        </ion-label>
-        <ion-checkbox color="primary" checked slot="start"></ion-checkbox>
-      </ion-item>
+    </ion-content>
 
-      <ion-item>
-        <ion-label>
-          <h2>晩飯を食う</h2>
-          <h3>2021年10月30日まで</h3>
-        </ion-label>
-        <ion-checkbox color="primary" checked slot="start"></ion-checkbox>
-      </ion-item>
-
-    </ion-list>
-
-  </ion-content>
-
+    <script src="main.js"></script>
 </body>
 
 </html>
