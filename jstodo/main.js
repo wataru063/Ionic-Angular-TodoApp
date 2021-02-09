@@ -1,6 +1,6 @@
 const addButton = document.querySelector('#addButton');
 addButton.addEventListener('click', () => {
-  showAlert('追加ボタンクリック', 'これで確認できました。', 'もう閉じて良いですよ');
+  showAlert('タスク追加', '', 'やらなきゃいけないことは何？');
 })
 
 function addToDo (todo) {
@@ -16,7 +16,7 @@ function addToDo (todo) {
         <ion-checkbox ${(todo.done) ? 'checked' : ''} color="primary" slot="start"></ion-checkbox>
     </ion-item>
     <ion-item-options side="end">
-      <ion-item-option onClick="unread(item)" color="danger" expandable>
+    <ion-item-option color="danger" expandable onClick="onDeleteToDo('${todo.id}')">
         Delete
       </ion-item-option>
     </ion-item-options>
@@ -24,33 +24,10 @@ function addToDo (todo) {
   todoList.appendChild(todoItem);
 }
 
-function writeToDo (todos) {
-  const todoList = document.querySelector("#todos");
-  const doneList = document.querySelector("#done");
-
-  for (let todo of todos) {
-    const todoItem = document.createElement("ion-item-sliding");
-    todoItem.id = todo.id;
-    todoItem.innerHTML = `
-      <ion-item>
-        <ion-label>
-          <h2>${todo.title}</h2>
-          <h3>${todo.due.toDateString()}まで</h3>
-        </ion-label>
-        <ion-checkbox ${(todo.done) ? 'checked' : ''} color="primary" slot="start"></ion-checkbox>
-      </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option onClick="unread(item)" color="danger" expandable>
-          Delete
-        </ion-item-option>
-      </ion-item-options>
-    `;
-    if(todo.done) {
-      doneList.appendChild(todoItem);
-    } else {
-      todoList.appendChild(todoItem)
-    }
-  }
+function onDeleteToDo(todoId) {
+  console.log(todoId);
+  todos.splice(todos.findIndex(el => el.id === todoId), 1);
+  document.querySelector(`#${todoId}`).remove();
 }
 
 function showAlert(header, subheader, message) {
@@ -77,7 +54,7 @@ function showAlert(header, subheader, message) {
       role: 'cancel',
     },
     {
-      text: 'Add',
+      text: 'OK',
       handler: () => {
         const todo = {};
         todo.title = document.querySelector('#new-todo').value;
@@ -95,50 +72,91 @@ function showAlert(header, subheader, message) {
 
 const todos = [
   {
+    id: "todo1",
     title: "部屋の掃除",
     due: new Date(2021, 9, 31),
     done: false,
   },
   {
+    id: "todo2",
     title: "ゴミ捨て",
     due: new Date(2021, 9, 31),
     done: false,
   },
   {
+    id: "todo3",
     title: "風呂の掃除",
     due: new Date(2021, 9, 31),
     done: false,
   },
   {
+    id: "todo4",
     title: "屋根の掃除",
     due: new Date(2021, 9, 31),
     done: false,
   },
   {
+    id: "todo5",
     title: "窓の掃除",
     due: new Date(2021, 9, 31),
     done: false,
   },
   {
+    id: "todo6",
     title: "犬小屋の掃除",
     due: new Date(2021, 9, 31),
     done: false,
   },
   {
+    id: "todo7",
     title: "朝飯を食う",
     due: new Date(2021, 9, 31),
     done: true,
   },
   {
+    id: "todo8",
     title: "昼飯を食う",
     due: new Date(2021, 9, 31),
     done: true,
   },
   {
+    id: "todo9",
     title: "晩飯を食う",
     due: new Date(2021, 9, 31),
     done: true,
   },
 ];
+
+
+function writeToDo(todos) {
+  const todoList = document.querySelector("#todos");
+  const doneList = document.querySelector("#done");
+
+  for (let todo of todos) {
+    const todoItem = document.createElement("ion-item-sliding");
+    todoItem.id = todo.id;
+    todoItem.innerHTML = `
+      <ion-item>
+        <ion-label>
+          <h2>${todo.title}</h2>
+          <h3>${todo.due.toDateString()}まで</h3>
+        </ion-label>
+        <ion-checkbox ${
+          todo.done ? "checked" : ""
+        } color="primary" slot="start"></ion-checkbox>
+      </ion-item>
+      <ion-item-options side="end">
+    <ion-item-option color="danger" expandable onClick="onDeleteToDo('${todo.id}')">
+          Delete
+        </ion-item-option>
+      </ion-item-options>
+    `;
+    if (todo.done) {
+      doneList.appendChild(todoItem);
+    } else {
+      todoList.appendChild(todoItem);
+    }
+  }
+}
 
 writeToDo(todos);
