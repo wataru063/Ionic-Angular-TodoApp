@@ -1,8 +1,3 @@
-const addButton = document.querySelector('#addButton');
-addButton.addEventListener('click', () => {
-  showAlert('タスク追加', '', 'やらなきゃいけないことは何？');
-})
-
 function addToDo (todo) {
   const todoList = document.querySelector("#todos");
   const doneList = document.querySelector("#done");
@@ -10,7 +5,7 @@ function addToDo (todo) {
   const todoItem = document.createElement("ion-item-sliding");
   todoItem.id = todo.id;
   todoItem.innerHTML = `
-    <ion-item onclick="updateToDo('${todo.id}')">
+    <ion-item onclick="onItemClicked('${todo.id}')">
       <ion-label>
         <h2>${todo.title}</h2>
         <h3>${todo.due.toDateString()}まで</h3>
@@ -18,7 +13,7 @@ function addToDo (todo) {
         <ion-checkbox ${(todo.done) ? 'checked' : ''} color="primary" slot="start"></ion-checkbox>
     </ion-item>
     <ion-item-options side="end">
-    <ion-item-option color="danger" expandable onClick="deleteToDo('${todo.id}')">
+    <ion-item-option color="danger" expandable onClick="onDeleteToDo('${todo.id}')">
         Delete
       </ion-item-option>
     </ion-item-options>
@@ -28,18 +23,6 @@ function addToDo (todo) {
   } else {
     todoList.appendChild(todoItem);
   }
-}
-
-function deleteToDo(todoId) {
-  todos.splice(todos.findIndex(el => el.id === todoId), 1);
-  document.querySelector(`#${todoId}`).remove();
-}
-
-function updateToDo(todoId) {
-  const todo = todos.find(el => el.id === todoId);
-  todo.done = !todo.done;
-  document.querySelector(`#${todoId}`).remove();
-  addToDo(todo);
 }
 
 function showAlert(header, subheader, message) {
@@ -140,36 +123,70 @@ const todos = [
   },
 ];
 
+const subject = new rxjs.Subject();
+const observable = rxjs.from([1,2,3,4,5]);
+const { filter, map, mergeMap, tap } = rxjs.operators;
 
-function writeToDo(todos) {
-  const todoList = document.querySelector("#todos");
-  const doneList = document.querySelector("#done");
+const WRITE_TODOS = "[ToDo Page] Load ToDos";
+const DELETE_TODOS = "[ToDo Page] Delete ToDo";
+const TOGGLE_STATUS = "[ToDo Page] Toggle ToDo Status";
 
-  for (let todo of todos) {
-    const todoItem = document.createElement("ion-item-sliding");
-    todoItem.id = todo.id;
-    todoItem.innerHTML = `
-    <ion-item onclick="updateToDo('${todo.id}')">
-        <ion-label>
-          <h2>${todo.title}</h2>
-          <h3>${todo.due.toDateString()}まで</h3>
-        </ion-label>
-        <ion-checkbox ${
-          todo.done ? "checked" : ""
-        } color="primary" slot="start"></ion-checkbox>
-      </ion-item>
-      <ion-item-options side="end">
-    <ion-item-option color="danger" expandable onClick="deleteToDo('${todo.id}')">
-          Delete
-        </ion-item-option>
-      </ion-item-options>
-    `;
-    if (todo.done) {
-      doneList.appendChild(todoItem);
-    } else {
-      todoList.appendChild(todoItem);
-    }
-  }
+subject.pipe(
+  filter(action => action.type === WRITE_TODOS),
+  mergeMap(action => rxjs.from(action.payload)),
+  tap(todo => addToDo(todo))
+).subscribe();
+
+subject.pipe(
+  filter(action => action.type === DELETE_TODOS),
+  map(action => action.payload),
+  tap(todo => document.querySelector(`#${todo.id}`).remove())
+).subscribe();
+
+subject.pipe(
+  filter(action => action.type === TOGGLE_STATUS),
+  map(action => action.payload),
+  tap(todo => subject.next({
+    type: DELETE_TODOS,
+    payload: todo
+  })),
+  tap(todo => subject.next({
+    type: WRITE_TODOS,
+    payload: [todo]
+  }))
+).subscribe();
+
+subject.pipe(
+
+)
+
+const action = {
+  type: WRITE_TODOS,
+  payload: todos
+};
+subject.next(action);
+
+const addButton = document.querySelector('#addButton');
+rxjs.fromEvent(addButton, 'click').pipe(
+  tap(el => showAlert('タスク追加', '', 'やらなきゃいけないことは何？'))
+).subscribe();
+
+function onDeleteToDo(todoId) {
+  const todo = todos.find((el) => el.id === todoId);
+  todos.splice(todos.findIndex(el => el.id === todoId), 1);
+  const action = {
+    type: DELETE_TODOS,
+    payload: todo,
+  };
+  subject.next(action)
 }
 
-writeToDo(todos);
+function onItemClicked(todoId) {
+  const todo = todos.find((el) => el.id === todoId);
+  todo.done = !todo.done;
+  const action = {
+    type: TOGGLE_STATUS,
+    payload: todo,
+  };
+  subject.next(action);
+}
