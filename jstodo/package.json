@@ -1,0 +1,17 @@
+{
+  "name": "jstodo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.1.5"
+  },
+  "dependencies": {
+    "rxjs": "^6.6.3"
+  }
+}
